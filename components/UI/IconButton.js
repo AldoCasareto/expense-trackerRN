@@ -3,8 +3,6 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 
 const IconButton = ({ iconName, color, size, onPress }) => {
-  console.log(iconName);
-  console.log(color);
   return (
     <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
       <View style={styles.buttonContainer}>

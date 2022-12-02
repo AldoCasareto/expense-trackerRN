@@ -1,7 +1,7 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import React from 'react';
 import { GlobalStyles } from '../../constants/styles';
-import { getFormattedDate } from '../../util/data';
+import { getFormattedDate } from '../../util/date';
 import { useNavigation } from '@react-navigation/native';
 
 const ExpenseItem = ({ item }) => {
