@@ -16,6 +16,7 @@ const ManageExpense = ({ route, navigation }) => {
 
   const deleteHandler = () => {
     deleteExpense(id);
+    this.toast.show('Expense successfully deleted!', 500);
     navigation.goBack();
   };
 
@@ -37,26 +38,28 @@ const ManageExpense = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.buttons}>
-        <Button style={styles.button} mode='flat' onPress={cancelHandler}>
-          Cancel
-        </Button>
-        <Button style={styles.button} onPress={confirmHandler}>
-          {isEditing ? 'Update' : 'Add'}
-        </Button>
-      </View>
-      {isEditing && (
-        <View style={styles.deleteContainer}>
-          <IconButton
-            iconName='trash'
-            color={GlobalStyles.colors.error500}
-            size='36'
-            onPress={deleteHandler}
-          />
+    <>
+      <View style={styles.container}>
+        <View style={styles.buttons}>
+          <Button style={styles.button} mode='flat' onPress={cancelHandler}>
+            Cancel
+          </Button>
+          <Button style={styles.button} onPress={confirmHandler}>
+            {isEditing ? 'Update' : 'Add'}
+          </Button>
         </View>
-      )}
-    </View>
+        {isEditing && (
+          <View style={styles.deleteContainer}>
+            <IconButton
+              iconName='trash'
+              color={GlobalStyles.colors.error500}
+              size='36'
+              onPress={deleteHandler}
+            />
+          </View>
+        )}
+      </View>
+    </>
   );
 };
 
