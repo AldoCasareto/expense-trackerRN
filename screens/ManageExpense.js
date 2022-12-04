@@ -1,11 +1,16 @@
 import { View, StyleSheet } from 'react-native';
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useContext, useLayoutEffect, useState } from 'react';
 import { GlobalStyles } from '../constants/styles';
 import IconButton from '../components/UI/IconButton';
 import { ExpensesContext } from '../store/expenses.context';
 import Form from '../components/ManageExpense/Form';
+import { addExpenseDb, deleteExpenseDb, updateExpenseDb } from '../util/services';
+import Loading from '../components/UI/Loading';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 
 const ManageExpense = ({ route, navigation }) => {
+  const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const { deleteExpense, addExpense, updateExpense, expenses } = useContext(ExpensesContext);
   const id = route.params?.expenseId;
   const isEditing = !!id;
@@ -17,23 +22,46 @@ const ManageExpense = ({ route, navigation }) => {
   }, [isEditing, navigation]);
 
   const deleteHandler = () => {
-    deleteExpense(id);
-    this.toast.show('Expense successfully deleted!', 500);
-    navigation.goBack();
+    setIsLoading(true);
+    try {
+      deleteExpense(id);
+      deleteExpenseDb(id);
+      navigation.goBack();
+    } catch (error) {
+      setError('could not delete de expense');
+    }
   };
 
   const cancelHandler = () => {
     navigation.goBack();
   };
 
-  const confirmHandler = (expenseData) => {
-    if (isEditing) {
-      updateExpense(id, expenseData);
-    } else {
-      addExpense(expenseData);
+  const confirmHandler = async (expenseData) => {
+    setIsLoading(true);
+    try {
+      if (isEditing) {
+        updateExpense(id, expenseData);
+        updateExpenseDb(id, expenseData);
+      } else {
+        const id = await addExpenseDb(expenseData);
+        addExpense({ ...expenseData, id });
+      }
+      navigation.goBack();
+    } catch (error) {
+      setError('could not save the expense');
+      setIsLoading(false);
     }
-    navigation.goBack();
   };
+
+  const handleError = () => setError(null);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error && isLoading) {
+    return <ErrorOverlay onConfirm={handleError} message={error} />;
+  }
 
   return (
     <>

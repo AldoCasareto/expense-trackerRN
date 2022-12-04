@@ -9,11 +9,11 @@ const Form = ({ onCancel, onSubmit, isEditing, defaultValue }) => {
   const [inputs, setInputs] = useState({
     description: { value: defaultValue?.description ?? '', isValid: true },
     date: {
-      value: (defaultValue && getFormattedDate(defaultValue.date)) ?? '',
+      value: getFormattedDate(defaultValue?.date) ?? '',
       isValid: true,
     },
     amount: {
-      value: (defaultValue && defaultValue.amount.toString()) ?? '',
+      value: defaultValue?.amount.toString() ?? '',
       isValid: true,
     },
   });
